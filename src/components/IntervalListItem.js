@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Button } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { Dimensions, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useState } from "react";
@@ -11,10 +11,12 @@ export default function IntervalListItem(props) {
   const styles = getTileStyle(props.index);
   if (props.addNew) {
     return (
-      <View style={styles.newIntervalContainer}>
-        <Text style={styles.title}>Add New Interval</Text>
-        <Icon style={styles.addIcon} name="plus" size={20} color="#fff" />
-      </View>
+      <TouchableOpacity onPress={props.onEdit}>
+        <View style={styles.newIntervalContainer}>
+          <Text style={styles.title}>Add New Interval</Text>
+          <Icon style={styles.addIcon} name="plus" size={20} color="#fff" />
+        </View>
+      </TouchableOpacity>
     );
   }
 
@@ -23,10 +25,10 @@ export default function IntervalListItem(props) {
   return (
     <View style={styles.container}>
       <GestureRecognizer
-        onSwipeLeft={(state) => {
+        onSwipeLeft={() => {
           setMode("edit");
         }}
-        onSwipeRight={(state) => {
+        onSwipeRight={() => {
           setMode("view");
         }}
       >
@@ -51,7 +53,12 @@ export default function IntervalListItem(props) {
               <Text style={styles.text}>Times: {interval.times.join(",")}</Text>
             </View>
             <View style={styles.editButtons}>
-              <TouchableOpacity onPress={props.onDelete}>
+              <TouchableOpacity
+                onPress={() => {
+                  setMode("view");
+                  props.onDelete();
+                }}
+              >
                 <Icon
                   style={styles.editIcon}
                   name="trash"
@@ -59,7 +66,12 @@ export default function IntervalListItem(props) {
                   color="#fff"
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={props.onEdit}>
+              <TouchableOpacity
+                onPress={() => {
+                  setMode("view");
+                  props.onEdit();
+                }}
+              >
                 <Icon
                   style={styles.editIcon}
                   name="pencil"

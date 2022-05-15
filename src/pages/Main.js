@@ -1,45 +1,49 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import IntervalListItem from "../components/IntervalListItem";
-import MenuBar from "../components/MenuBar";
-
-const list = [
-  {
-    name: "default 1",
-    times: [60, 90, 60, 90, 60],
-    id: "1",
-  },
-  {
-    name: "default 12",
-    times: [60, 90, 60, 90, 60],
-    id: "2",
-  },
-  {
-    name: "default 13",
-    times: [60, 90, 60, 90, 60],
-    id: "3",
-  },
-];
+import { useState, useEffect } from "react";
+import storage from "../state/Storage";
 
 export default function Main({ navigation }) {
+  const [intervals, setIntervals] = useState({});
+
+  useEffect(() => {
+    storage
+      .load({
+        key: "intervals",
+      })
+      .then((storedIntervals) => {
+        setIntervals(storedIntervals);
+      });
+  }, []);
+  useEffect(() => {}, [intervals]);
+
   return (
     <SafeAreaView style={styles.container}>
-      <MenuBar />
       <ScrollView>
-        {list.map((l, i) => (
-          <IntervalListItem
-            key={i}
-            index={i}
-            interval={l}
-            onEdit={() => navigation.navigate("EditInterval", { id: l.id })}
-            onDelete={() => {
-              console.log("DELETE " + l.id);
-            }}
-            onPlay={() => navigation.navigate("PlayInterval")}
-          />
-        ))}
-
-        <IntervalListItem key={list.length} index={list.length} addNew={true} />
+        {Object.keys(intervals).map((key, i) => {
+          const interval = intervals[key];
+          return (
+            <IntervalListItem
+              key={i}
+              index={i}
+              interval={interval}
+              onEdit={() => navigation.navigate("EditInterval", { id: key })}
+              onDelete={() => {
+                const newIntervals = { ...intervals };
+                delete newIntervals[key];
+                setIntervals(newIntervals);
+              }}
+              onPlay={() => navigation.navigate("PlayInterval")}
+            />
+          );
+        })}
+        <IntervalListItem
+          key={intervals.length}
+          index={intervals.length}
+          onEdit={() => navigation.navigate("EditInterval")}
+          addNew={true}
+        />
       </ScrollView>
       <StatusBar style="auto" />
     </SafeAreaView>

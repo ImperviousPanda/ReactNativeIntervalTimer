@@ -1,10 +1,8 @@
 import { View, Text, SafeAreaView, StyleSheet } from "react-native";
-import MenuBar from "../components/MenuBar";
 
 export default function EditInterval() {
   return (
     <SafeAreaView style={styles.container}>
-      <MenuBar />
       <Text>Edit interval</Text>
     </SafeAreaView>
   );
