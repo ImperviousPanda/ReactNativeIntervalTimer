@@ -4,7 +4,7 @@ import IntervalListItem from "../components/IntervalListItem";
 import { useState, useEffect } from "react";
 import storage from "../state/Storage";
 
-export default function Main({ navigation }) {
+export default function Main({ navigation, route }) {
   const [intervals, setIntervals] = useState({});
 
   useEffect(() => {
@@ -16,7 +16,8 @@ export default function Main({ navigation }) {
         setIntervals(storedIntervals);
       });
   }, []);
-  useEffect(() => {}, [intervals]);
+
+  useEffect(() => {}, [intervals, route.params]);
 
   return (
     <SafeAreaView style={styles.container}>
