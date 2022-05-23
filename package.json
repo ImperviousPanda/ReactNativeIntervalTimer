@@ -20,7 +20,7 @@
     "react-native": "0.68.2",
     "react-native-draggable-flatlist": "^3.1.1",
     "react-native-gesture-handler": "~2.2.1",
-    "react-native-numeric-input": "https://github.com/Darkilen/react-native-numeric-input",
+    "react-native-modal-selector": "^2.1.0",
     "react-native-reanimated": "^2.3.1",
     "react-native-safe-area-context": "4.2.4",
     "react-native-screens": "~3.11.1",

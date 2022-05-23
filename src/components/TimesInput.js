@@ -1,42 +1,31 @@
-import { View, StyleSheet } from "react-native";
-import NumericInput from "react-native-numeric-input";
+import { View, StyleSheet, Text } from "react-native";
 import DraggableFlatList from "react-native-draggable-flatlist";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
+import TimeInput from "./TimeInput";
 
-export default function TimesInput(props) {
-  const times = props.times;
-
+export default function TimesInput({ times, onChange, onEdit }) {
   const [newTime, setNewTime] = useState(5);
 
   const renderItem = ({ drag, index, item }) => {
+    const minutes = Math.floor(item / 60);
+    const seconds = item % 60;
     return (
       <View style={styles.timeInterval}>
         <TouchableOpacity
           onPressIn={(data, i) => {
             const newTimes = [...times];
             newTimes.splice(i, 1);
-            props.onChange(newTimes);
+            onChange(newTimes);
           }}
         >
           <Icon style={styles.icon} name="close" size={20} color="#fff" />
         </TouchableOpacity>
         <View style={styles.numberInput}>
-          <NumericInput
-            value={item}
-            rounded
-            textColor="white"
-            rightButtonBackgroundColor="#9bbfb6"
-            leftButtonBackgroundColor="#9bbfb6"
-            borderColor="#9bbfb6"
-            minValue={5}
-            onChange={(value) => {
-              const newTimes = [...times];
-              newTimes[index] = value;
-              props.onChange(newTimes);
-            }}
-          />
+          <Text style={styles.timeDisplay}>
+            {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+          </Text>
         </View>
         <View style={styles.touchableContainer}>
           <TouchableOpacity
@@ -54,7 +43,7 @@ export default function TimesInput(props) {
     <View style={styles.container}>
       <DraggableFlatList
         onDragEnd={({ data }) => {
-          props.onChange(data);
+          onChange(data);
         }}
         data={times}
         renderItem={renderItem}
@@ -62,23 +51,13 @@ export default function TimesInput(props) {
       />
       <View style={styles.timeInterval}>
         <View style={styles.numberInput}>
-          <NumericInput
-            value={newTime}
-            rounded
-            textColor="white"
-            rightButtonBackgroundColor="#9bbfb6"
-            leftButtonBackgroundColor="#9bbfb6"
-            borderColor="#9bbfb6"
-            minValue={5}
-            onChange={setNewTime}
-          />
+          <TimeInput value={newTime} onChange={setNewTime} />
         </View>
         <TouchableOpacity
           onPress={() => {
             const newTimes = [...times];
             newTimes.push(newTime);
-            props.onChange(newTimes);
-            setNewTime(5);
+            onChange(newTimes);
           }}
         >
           <Icon style={styles.icon} name="plus" size={20} color="#fff" />
@@ -115,5 +94,9 @@ const styles = StyleSheet.create({
   },
   touchableContainer: {
     width: 60,
+  },
+  timeDisplay: {
+    color: "white",
+    fontSize: 24,
   },
 });
