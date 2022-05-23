@@ -9,6 +9,7 @@ import {
 import { useState, useEffect } from "react";
 import storage from "../state/Storage";
 import TimesInput from "../components/TimesInput";
+import uuid from "react-native-uuid";
 
 export default function EditInterval({ route, navigation }) {
   const intervalId = route.params ? route.params.id : null;
@@ -69,8 +70,16 @@ export default function EditInterval({ route, navigation }) {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              intervals[intervalId].name = name;
-              intervals[intervalId].times = times;
+              if (intervalId) {
+                intervals[intervalId].name = name;
+                intervals[intervalId].times = times;
+              } else {
+                const newId = uuid.v4();
+                intervals[newId] = {
+                  name,
+                  times,
+                };
+              }
               storage
                 .save({
                   key: "intervals",
