@@ -7,7 +7,7 @@ import storage from "../state/Storage";
 export default function Main({ navigation, route }) {
   const [intervals, setIntervals] = useState({});
 
-  useEffect(() => {
+  const loadIntervals = () => {
     storage
       .load({
         key: "intervals",
@@ -15,9 +15,17 @@ export default function Main({ navigation, route }) {
       .then((storedIntervals) => {
         setIntervals(storedIntervals);
       });
+  };
+
+  useEffect(() => {
+    loadIntervals();
   }, []);
 
-  useEffect(() => {}, [intervals, route.params]);
+  useEffect(() => {
+    if (route.params.refresh) {
+      loadIntervals();
+    }
+  }, [route.params]);
 
   return (
     <SafeAreaView style={styles.container}>
